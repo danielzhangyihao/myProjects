@@ -1,0 +1,388 @@
+<html>
+<head>
+<title>hog.py</title>
+<link href="css/assignments.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<h3>hog.py (<a href="hog.py">plain text</a>)</h3>
+<hr>
+<pre>
+<span style="color: darkred">"""The Game of Hog"""
+
+</span><span style="color: blue; font-weight: bold">from </span>dice <span style="color: blue; font-weight: bold">import </span>four_sided_dice<span style="font-weight: bold">, </span>six_sided_dice<span style="font-weight: bold">, </span>make_test_dice
+<span style="color: blue; font-weight: bold">from </span>ucb <span style="color: blue; font-weight: bold">import </span>main<span style="font-weight: bold">, </span>trace<span style="font-weight: bold">, </span>log_current_line<span style="font-weight: bold">, </span>interact
+
+goal <span style="font-weight: bold">= </span><span style="color: red">100          </span><span style="color: green; font-style: italic"># The goal of Hog is to score 100 points.
+</span>commentary <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">False  </span><span style="color: green; font-style: italic"># Whether to display commentary for every roll.
+
+
+# Taking turns
+
+</span><span style="color: blue; font-weight: bold">def </span>roll_dice<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">, </span>dice<span style="font-weight: bold">=</span>six_sided_dice<span style="font-weight: bold">, </span>who<span style="font-weight: bold">=</span><span style="color: red">'Boss Hogg'</span><span style="font-weight: bold">, </span>ones_lose<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Calculate WHO's turn score after rolling DICE for NUM_ROLLS times.
+
+    num_rolls:  The number of dice rolls that will be made; at least 1.
+    dice:       A function of no args and returns an integer outcome.
+    who:        Name of the current player, for commentary.
+    """
+    </span><span style="color: blue; font-weight: bold">assert </span>type<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">) == </span>int<span style="font-weight: bold">, </span><span style="color: red">'num_rolls must be an integer.'
+    </span><span style="color: blue; font-weight: bold">assert </span>num_rolls <span style="font-weight: bold">&gt; </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">'Must roll at least once.'
+    "*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>take_turn<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">, </span>opp_score<span style="font-weight: bold">, </span>dice<span style="font-weight: bold">=</span>six_sided_dice<span style="font-weight: bold">, </span>who<span style="font-weight: bold">=</span><span style="color: red">'Boss Hogg'</span><span style="font-weight: bold">, </span>ones_lose<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">True</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simulate a turn in which WHO chooses to roll NUM_ROLLS, perhaps 0.
+
+    num_rolls:       The number of dice rolls that will be made.
+    opponent_score:  The total score of the opponent.
+    dice:            A function of no args and returns an integer outcome.
+    who:             Name of the current player, for commentary.
+    """
+    </span><span style="color: blue; font-weight: bold">assert </span>type<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">) == </span>int<span style="font-weight: bold">, </span><span style="color: red">'num_rolls must be an integer.'
+    </span><span style="color: blue; font-weight: bold">assert </span>num_rolls <span style="font-weight: bold">&gt;= </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">'Cannot roll a negative number of dice.'
+    </span><span style="color: blue; font-weight: bold">if </span>commentary<span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>who<span style="font-weight: bold">, </span><span style="color: red">'is going to roll'</span><span style="font-weight: bold">, </span>num_rolls<span style="font-weight: bold">, </span><span style="color: red">'dice'</span><span style="font-weight: bold">)
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>take_turn_test<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Test the roll_dice and take_turn functions using test dice."""
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing roll_dice with deterministic test dice --'</span><span style="font-weight: bold">)
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>roll_dice<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">'First two rolls total 10'
+
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>roll_dice<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Third roll is a 1'
+
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">3</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>roll_dice<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'First roll is a 1'
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing take_turn --'</span><span style="font-weight: bold">)
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">'First two rolls total 10'
+
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">20</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Third roll is a 1'
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing Free Bacon rule --'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">34</span><span style="font-weight: bold">) == </span><span style="color: red">4</span><span style="font-weight: bold">, </span><span style="color: red">'Opponent score 10s digit is 3'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">71</span><span style="font-weight: bold">) == </span><span style="color: red">8</span><span style="font-weight: bold">, </span><span style="color: red">'Opponent score 10s digit is 7'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">,  </span><span style="color: red">7</span><span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Opponont score 10s digit is 0'
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing Touchdown rule --'</span><span style="font-weight: bold">)
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">7</span><span style="font-weight: bold">, </span><span style="color: red">'Original score was 6'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">2</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">14</span><span style="font-weight: bold">, </span><span style="color: red">'Original score was 12'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">50</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">) == </span><span style="color: red">7</span><span style="font-weight: bold">, </span><span style="color: red">'Original score was 6'
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing 49ers rule --'</span><span style="font-weight: bold">)
+    </span>dice <span style="font-weight: bold">= </span>make_test_dice<span style="font-weight: bold">(</span><span style="color: red">1</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">assert </span>roll_dice<span style="font-weight: bold">(</span><span style="color: red">3</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">, </span>ones_lose<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">) == </span><span style="color: red">3</span><span style="font-weight: bold">, </span><span style="color: red">'49ers rule in effect'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">, </span>ones_lose<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">) == </span><span style="color: red">10</span><span style="font-weight: bold">, </span><span style="color: red">'49ers rule in effect'
+    </span><span style="color: blue; font-weight: bold">assert </span>take_turn<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">, </span><span style="color: red">0</span><span style="font-weight: bold">, </span>dice<span style="font-weight: bold">, </span>ones_lose<span style="font-weight: bold">=</span><span style="color: blue; font-weight: bold">False</span><span style="font-weight: bold">) == </span><span style="color: red">7</span><span style="font-weight: bold">, </span><span style="color: red">'49ers and Touchdown rule'
+
+    '*** You may add more tests here if you wish ***'
+
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Tests for roll_dice and take_turn passed.'</span><span style="font-weight: bold">)
+
+
+</span><span style="color: green; font-style: italic"># Commentator
+
+</span><span style="color: blue; font-weight: bold">def </span>announce<span style="font-weight: bold">(</span>outcome<span style="font-weight: bold">, </span>who<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Print a description of WHO rolling OUTCOME."""
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>who<span style="font-weight: bold">, </span><span style="color: red">'rolled a'</span><span style="font-weight: bold">, </span>outcome<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span>draw_number<span style="font-weight: bold">(</span>outcome<span style="font-weight: bold">))
+
+</span><span style="color: blue; font-weight: bold">def </span>draw_number<span style="font-weight: bold">(</span>n<span style="font-weight: bold">, </span>dot<span style="font-weight: bold">=</span><span style="color: red">'*'</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a text representation of rolling the number N.
+    If a number has multiple possible representations (such as 2 and 3), any
+    valid representation is acceptable.
+
+    &gt;&gt;&gt; print(draw_number(5))
+     -------
+    | *   * |
+    |   *   |
+    | *   * |
+     -------
+
+    &gt;&gt;&gt; print(draw_number(6, '$'))
+     -------
+    | $   $ |
+    | $   $ |
+    | $   $ |
+     -------
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'' </span><span style="color: green; font-style: italic"># replace this line
+
+</span><span style="color: blue; font-weight: bold">def </span>draw_dice<span style="font-weight: bold">(</span>c<span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span>b<span style="font-weight: bold">, </span>s<span style="font-weight: bold">, </span>dot<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return an ASCII art representation of a die roll.
+
+    c, f, b, &amp; s are boolean arguments. This function returns a multi-line
+    string of the following form, where the letters in the diagram are either
+    filled if the corresponding argument is true, or empty if it is false.
+
+     -------
+    | b   f |
+    | s c s |
+    | f   b |
+     -------
+
+    The sides with 2 and 3 dots have 2 possible depictions due to rotation.
+    Either representation is acceptable.
+
+    This function uses Python syntax not yet covered in the course.
+
+    c, f, b, s -- booleans; whether to place dots in corresponding positions.
+    dot        -- A length-one string to use for a dot.
+    """
+    </span><span style="color: blue; font-weight: bold">assert </span>len<span style="font-weight: bold">(</span>dot<span style="font-weight: bold">) == </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">'Dot must be a single symbol'
+    </span>border <span style="font-weight: bold">= </span><span style="color: red">' -------'
+    </span><span style="color: blue; font-weight: bold">def </span>draw<span style="font-weight: bold">(</span>b<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>dot <span style="color: blue; font-weight: bold">if </span>b <span style="color: blue; font-weight: bold">else </span><span style="color: red">' '
+    </span>c<span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span>b<span style="font-weight: bold">, </span>s <span style="font-weight: bold">= </span>map<span style="font-weight: bold">(</span>draw<span style="font-weight: bold">, [</span>c<span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span>b<span style="font-weight: bold">, </span>s<span style="font-weight: bold">])
+    </span>top <span style="font-weight: bold">= </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">([</span><span style="color: red">'|'</span><span style="font-weight: bold">, </span>b<span style="font-weight: bold">, </span><span style="color: red">' '</span><span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span><span style="color: red">'|'</span><span style="font-weight: bold">])
+    </span>middle <span style="font-weight: bold">= </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">([</span><span style="color: red">'|'</span><span style="font-weight: bold">, </span>s<span style="font-weight: bold">, </span>c<span style="font-weight: bold">, </span>s<span style="font-weight: bold">, </span><span style="color: red">'|'</span><span style="font-weight: bold">])
+    </span>bottom <span style="font-weight: bold">= </span><span style="color: red">' '</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">([</span><span style="color: red">'|'</span><span style="font-weight: bold">, </span>f<span style="font-weight: bold">, </span><span style="color: red">' '</span><span style="font-weight: bold">, </span>b<span style="font-weight: bold">, </span><span style="color: red">'|'</span><span style="font-weight: bold">])
+    </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'\n'</span><span style="font-weight: bold">.</span>join<span style="font-weight: bold">([</span>border<span style="font-weight: bold">, </span>top<span style="font-weight: bold">, </span>middle<span style="font-weight: bold">, </span>bottom<span style="font-weight: bold">, </span>border<span style="font-weight: bold">])
+
+
+</span><span style="color: green; font-style: italic"># Game simulator
+
+</span><span style="color: blue; font-weight: bold">def </span>num_allowed_dice<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the maximum number of dice allowed this turn. The maximum
+    number of dice allowed is 10 unless the sum of SCORE and
+    OPPONENT_SCORE has a 7 as its ones digit.
+
+    &gt;&gt;&gt; num_allowed_dice(1, 0)
+    10
+    &gt;&gt;&gt; num_allowed_dice(5, 7)
+    10
+    &gt;&gt;&gt; num_allowed_dice(7, 10)
+    1
+    &gt;&gt;&gt; num_allowed_dice(3, 24)
+    1
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>select_dice<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Select 6-sided dice unless the sum of scores is a multiple of 7.
+
+    &gt;&gt;&gt; select_dice(4, 24) == four_sided_dice
+    True
+    &gt;&gt;&gt; select_dice(16, 64) == six_sided_dice
+    True
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>other<span style="font-weight: bold">(</span>who<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the other player, for players numbered 0 or 1.
+
+    &gt;&gt;&gt; other(0)
+    1
+    &gt;&gt;&gt; other(1)
+    0
+    """
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>who <span style="font-weight: bold">+ </span><span style="color: red">1</span><span style="font-weight: bold">) % </span><span style="color: red">2
+
+</span><span style="color: blue; font-weight: bold">def </span>name<span style="font-weight: bold">(</span>who<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the name of player WHO, for player numbered 0 or 1."""
+    </span><span style="color: blue; font-weight: bold">if </span>who <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'Player 0'
+    </span><span style="color: blue; font-weight: bold">elif </span>who <span style="font-weight: bold">== </span><span style="color: red">1</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'Player 1'
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">return </span><span style="color: red">'An unknown player'
+
+</span><span style="color: blue; font-weight: bold">def </span>play<span style="font-weight: bold">(</span>strategy0<span style="font-weight: bold">, </span>strategy1<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Simulate a game and return 0 if the first player wins and 1 otherwise.
+
+    A strategy function takes two scores for the current and opposing players.
+    It returns the number of dice that the current player will roll this turn.
+
+    If a strategy returns more than the maximum allowed dice for a turn, then
+    the maximum allowed is rolled instead.
+
+    strategy0:  The strategy function for player 0, who plays first.
+    strategy1:  The strategy function for player 1, who plays second.
+    """
+    </span>who <span style="font-weight: bold">= </span><span style="color: red">0 </span><span style="color: green; font-style: italic"># Which player is about to take a turn, 0 (first) or 1 (second)
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+    </span><span style="color: blue; font-weight: bold">return </span>who
+
+
+<span style="color: green; font-style: italic"># Basic Strategy
+
+</span><span style="color: blue; font-weight: bold">def </span>always_roll<span style="font-weight: bold">(</span>n<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a strategy that always rolls N dice.
+
+    A strategy is a function that takes two game scores as arguments
+    (the current player's score, and the opponent's score), and returns a
+    number of dice to roll.
+
+    If a strategy returns more than the maximum allowed dice for a turn, then
+    the maximum allowed is rolled instead.
+
+    &gt;&gt;&gt; strategy = always_roll(5)
+    &gt;&gt;&gt; strategy(0, 0)
+    5
+    &gt;&gt;&gt; strategy(99, 99)
+    5
+    """
+    </span><span style="color: blue; font-weight: bold">def </span>strategy<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">):
+        </span><span style="color: blue; font-weight: bold">return </span>n
+    <span style="color: blue; font-weight: bold">return </span>strategy
+
+
+<span style="color: green; font-style: italic"># Experiments (Phase 2)
+
+</span><span style="color: blue; font-weight: bold">def </span>make_average<span style="font-weight: bold">(</span>fn<span style="font-weight: bold">, </span>num_samples<span style="font-weight: bold">=</span><span style="color: red">100</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a function that returns the average_value of FN when called.
+
+    To implement this function, you will have to use *args syntax, a new Python
+    feature introduced in this project.  See the project description.
+
+    &gt;&gt;&gt; dice = make_test_dice(3, 1, 5, 6)
+    &gt;&gt;&gt; avg_dice = make_average(dice)
+    &gt;&gt;&gt; avg_dice()
+    3.75
+    &gt;&gt;&gt; avg_score = make_average(roll_dice)
+    &gt;&gt;&gt; avg_score(2, dice)
+    6.0
+
+    In this last example, two different turn scenarios are averaged.
+    - In the first, the player rolls a 3 then a 1, receiving a score of 1.
+    - In the other, the player rolls a 5 and 6, scoring 11.
+    Thus, the average value is 6.0.
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>compare_strategies<span style="font-weight: bold">(</span>strategy<span style="font-weight: bold">, </span>baseline<span style="font-weight: bold">=</span>always_roll<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">)):
+    </span><span style="color: darkred">"""Return the average win rate (out of 1) of STRATEGY against BASELINE."""
+    </span>as_first <span style="font-weight: bold">= </span><span style="color: red">1 </span><span style="font-weight: bold">- </span>make_average<span style="font-weight: bold">(</span>play<span style="font-weight: bold">)(</span>strategy<span style="font-weight: bold">, </span>baseline<span style="font-weight: bold">)
+    </span>as_second <span style="font-weight: bold">= </span>make_average<span style="font-weight: bold">(</span>play<span style="font-weight: bold">)(</span>baseline<span style="font-weight: bold">, </span>strategy<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">return </span><span style="font-weight: bold">(</span>as_first <span style="font-weight: bold">+ </span>as_second<span style="font-weight: bold">) / </span><span style="color: red">2  </span><span style="color: green; font-style: italic"># Average the two results
+
+</span><span style="color: blue; font-weight: bold">def </span>eval_strategy_range<span style="font-weight: bold">(</span>make_strategy<span style="font-weight: bold">, </span>lower_bound<span style="font-weight: bold">, </span>upper_bound<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return the best integer argument value for MAKE_STRATEGY to use against
+    the always-roll-5 baseline, between LOWER_BOUND and UPPER_BOUND (inclusive).
+
+    make_strategy -- A one-argument function that returns a strategy.
+    lower_bound -- lower bound of the evaluation range.
+    upper_bound -- upper bound of the evaluation range.
+    """
+    </span>best_value<span style="font-weight: bold">, </span>best_win_rate <span style="font-weight: bold">= </span><span style="color: red">0</span><span style="font-weight: bold">, </span><span style="color: red">0
+    </span>value <span style="font-weight: bold">= </span>lower_bound
+    <span style="color: blue; font-weight: bold">while </span>value <span style="font-weight: bold">&lt;= </span>upper_bound<span style="font-weight: bold">:
+        </span>strategy <span style="font-weight: bold">= </span>make_strategy<span style="font-weight: bold">(</span>value<span style="font-weight: bold">)
+        </span>win_rate <span style="font-weight: bold">= </span>compare_strategies<span style="font-weight: bold">(</span>strategy<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Win rate against the baseline using'</span><span style="font-weight: bold">, </span>value<span style="font-weight: bold">, </span><span style="color: red">'value:'</span><span style="font-weight: bold">, </span>win_rate<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">if </span>win_rate <span style="font-weight: bold">&gt; </span>best_win_rate<span style="font-weight: bold">:
+            </span>best_win_rate<span style="font-weight: bold">, </span>best_value <span style="font-weight: bold">= </span>win_rate<span style="font-weight: bold">, </span>value
+        value <span style="font-weight: bold">+= </span><span style="color: red">1
+    </span><span style="color: blue; font-weight: bold">return </span>best_value
+
+<span style="color: blue; font-weight: bold">def </span>run_experiments<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Run a series of strategy experiments and report results."""
+    </span>result <span style="font-weight: bold">= </span>eval_strategy_range<span style="font-weight: bold">(</span>always_roll<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">10</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Best always_roll strategy:'</span><span style="font-weight: bold">, </span>result<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">if False</span><span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># Change to True when ready to test make_comeback_strategy
+        </span>result <span style="font-weight: bold">= </span>eval_strategy_range<span style="font-weight: bold">(</span>make_comeback_strategy<span style="font-weight: bold">, </span><span style="color: red">5</span><span style="font-weight: bold">, </span><span style="color: red">15</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Best comeback strategy:'</span><span style="font-weight: bold">, </span>result<span style="font-weight: bold">)
+
+    </span><span style="color: blue; font-weight: bold">if False</span><span style="font-weight: bold">: </span><span style="color: green; font-style: italic"># Change to True when ready to test make_mean_strategy
+        </span>result <span style="font-weight: bold">= </span>eval_strategy_range<span style="font-weight: bold">(</span>make_mean_strategy<span style="font-weight: bold">, </span><span style="color: red">1</span><span style="font-weight: bold">, </span><span style="color: red">10</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Best mean strategy:'</span><span style="font-weight: bold">, </span>result<span style="font-weight: bold">)
+
+    </span><span style="color: red">"*** You may add additional experiments here if you wish ***"
+
+
+</span><span style="color: green; font-style: italic"># Strategies
+
+</span><span style="color: blue; font-weight: bold">def </span>make_comeback_strategy<span style="font-weight: bold">(</span>margin<span style="font-weight: bold">, </span>num_rolls<span style="font-weight: bold">=</span><span style="color: red">5</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a strategy that rolls one extra time when losing by MARGIN."""
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+    </span><span style="color: blue; font-weight: bold">return </span>always_roll<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">)  </span><span style="color: green; font-style: italic"># Replace this call
+
+</span><span style="color: blue; font-weight: bold">def </span>make_mean_strategy<span style="font-weight: bold">(</span>min_points<span style="font-weight: bold">, </span>num_rolls<span style="font-weight: bold">=</span><span style="color: red">5</span><span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Return a strategy that attempts to give the opponent problems."""
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+    </span><span style="color: blue; font-weight: bold">return </span>always_roll<span style="font-weight: bold">(</span>num_rolls<span style="font-weight: bold">)  </span><span style="color: green; font-style: italic"># Replace this call
+
+</span><span style="color: blue; font-weight: bold">def </span>final_strategy<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Write a brief description of your final strategy.
+
+    *** YOUR DESCRIPTION HERE ***
+    """
+    </span><span style="color: red">"*** YOUR CODE HERE ***"
+
+</span><span style="color: blue; font-weight: bold">def </span>final_strategy_test<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Compares final strategy to the baseline strategy."""
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'-- Testing final_strategy --'</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Win rate:'</span><span style="font-weight: bold">, </span>compare_strategies<span style="font-weight: bold">(</span>final_strategy<span style="font-weight: bold">))
+
+
+
+</span><span style="color: green; font-style: italic"># Interaction.  You don't need to read this section of the program.
+
+</span><span style="color: blue; font-weight: bold">def </span>interactive_strategy<span style="font-weight: bold">(</span>score<span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Prints total game scores and returns an interactive tactic.
+
+    This function uses Python syntax/techniques not yet covered in this course.
+    """
+    </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Current score:'</span><span style="font-weight: bold">, </span>score<span style="font-weight: bold">, </span><span style="color: red">'to'</span><span style="font-weight: bold">, </span>opponent_score<span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">while True</span><span style="font-weight: bold">:
+        </span>response <span style="font-weight: bold">= </span>input<span style="font-weight: bold">(</span><span style="color: red">'How many dice will you roll? '</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">try</span><span style="font-weight: bold">:
+            </span>result <span style="font-weight: bold">= </span>int<span style="font-weight: bold">(</span>response<span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">except </span>ValueError<span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Please enter a positive number'</span><span style="font-weight: bold">)
+            </span><span style="color: blue; font-weight: bold">continue
+        if </span>result <span style="font-weight: bold">&lt; </span><span style="color: red">0</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">'Please enter a non-negative number'</span><span style="font-weight: bold">)
+        </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+            </span><span style="color: blue; font-weight: bold">return </span>result
+
+<span style="color: blue; font-weight: bold">def </span>play_interactively<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Play one interactive game."""
+    </span><span style="color: blue; font-weight: bold">global </span>commentary
+    commentary <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+    print</span><span style="font-weight: bold">(</span><span style="color: red">"Shall we play a game?"</span><span style="font-weight: bold">)
+    </span>winner <span style="font-weight: bold">= </span>play<span style="font-weight: bold">(</span>interactive_strategy<span style="font-weight: bold">, </span>always_roll<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">))
+    </span><span style="color: blue; font-weight: bold">if </span>winner <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"You win!"</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"The computer won."</span><span style="font-weight: bold">)
+
+</span><span style="color: blue; font-weight: bold">def </span>play_basic<span style="font-weight: bold">():
+    </span><span style="color: darkred">"""Play one game in which two basic strategies compete."""
+    </span><span style="color: blue; font-weight: bold">global </span>commentary
+    commentary <span style="font-weight: bold">= </span><span style="color: blue; font-weight: bold">True
+    </span>winner <span style="font-weight: bold">= </span>play<span style="font-weight: bold">(</span>always_roll<span style="font-weight: bold">(</span><span style="color: red">5</span><span style="font-weight: bold">), </span>always_roll<span style="font-weight: bold">(</span><span style="color: red">6</span><span style="font-weight: bold">))
+    </span><span style="color: blue; font-weight: bold">if </span>winner <span style="font-weight: bold">== </span><span style="color: red">0</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"Player 0, who always wants to roll 5, won."</span><span style="font-weight: bold">)
+    </span><span style="color: blue; font-weight: bold">else</span><span style="font-weight: bold">:
+        </span><span style="color: blue; font-weight: bold">print</span><span style="font-weight: bold">(</span><span style="color: red">"Player 1, who always wants to roll 6, won."</span><span style="font-weight: bold">)
+
+</span>@main
+<span style="color: blue; font-weight: bold">def </span>run<span style="font-weight: bold">(*</span>args<span style="font-weight: bold">):
+    </span><span style="color: darkred">"""Read in the command-line argument and calls corresponding functions.
+
+    This function uses Python syntax/techniques not yet covered in this course.
+    """
+    </span><span style="color: blue; font-weight: bold">import </span>argparse
+    parser <span style="font-weight: bold">= </span>argparse<span style="font-weight: bold">.</span>ArgumentParser<span style="font-weight: bold">(</span>description<span style="font-weight: bold">=</span><span style="color: red">"Play Hog"</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'--take_turn_test'</span><span style="font-weight: bold">, </span><span style="color: red">'-t'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'--play_interactively'</span><span style="font-weight: bold">, </span><span style="color: red">'-p'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'--play_basic'</span><span style="font-weight: bold">, </span><span style="color: red">'-b'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'--run_experiments'</span><span style="font-weight: bold">, </span><span style="color: red">'-r'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>parser<span style="font-weight: bold">.</span>add_argument<span style="font-weight: bold">(</span><span style="color: red">'--final_strategy_test'</span><span style="font-weight: bold">, </span><span style="color: red">'-f'</span><span style="font-weight: bold">, </span>action<span style="font-weight: bold">=</span><span style="color: red">'store_true'</span><span style="font-weight: bold">)
+    </span>args <span style="font-weight: bold">= </span>parser<span style="font-weight: bold">.</span>parse_args<span style="font-weight: bold">()
+    </span><span style="color: blue; font-weight: bold">for </span>name<span style="font-weight: bold">, </span>execute <span style="color: blue; font-weight: bold">in </span>args<span style="font-weight: bold">.</span>__dict__<span style="font-weight: bold">.</span>items<span style="font-weight: bold">():
+        </span><span style="color: blue; font-weight: bold">if </span>execute<span style="font-weight: bold">:
+            </span>globals<span style="font-weight: bold">()[</span>name<span style="font-weight: bold">]()
+
+</span>
+</pre>
+</body>
+</html>
